@@ -95,8 +95,6 @@ func GetProducts() {
 	}
 }
 
-//&produc.Id, &produc.Name, &produc.Category, &produc.Summary, &produc.Description, &produc.Price
-//%d - %s, $%.2f
 //GET A PRODUCT BY ID
 func GetProductByID(id int) {
 	var product string
@@ -127,9 +125,3 @@ func DeleteProductByID(id int) {
 	}
 
 }
-
-//ADD A PRODUCT
-//UPDATE A PRODUCT
-//GET ALL PRODUCTS
-//GET A PRODUCT BY ID
-//DELETE A PRODUCT BY ID
