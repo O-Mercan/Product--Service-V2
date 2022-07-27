@@ -1,4 +1,4 @@
-CREATE DATABASE products;
+CREATE DATABASE productsdb;
 
 
 CREATE TABLE products(
