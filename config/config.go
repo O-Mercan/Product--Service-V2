@@ -1,10 +1,6 @@
 package config
 
-import (
-	"fmt"
-	"github.com/joho/godotenv"
-	"os"
-)
+//import log "github.com/sirupsen/logrus"
 
 type DBConfig struct {
 	DBUsername string
@@ -15,15 +11,17 @@ type DBConfig struct {
 }
 
 func NewDBConfig() *DBConfig {
-	err := godotenv.Load()
+	/* err := godotenv.Load()
 	if err != nil {
-		fmt.Println("Error loading env vars")
-	}
+		log.Error("Error loading env vars")
+	} */
 	return &DBConfig{
-		DBUsername: os.Getenv("DB_USERNAME"),
-		DBPassword: os.Getenv("DB_PASSWORD"),
-		DBHost:     os.Getenv("DB_HOST"),
-		DBTable:    os.Getenv("DB_TABLE"),
-		DBPort:     os.Getenv("DB_PORT"),
+		DBUsername: "postgres",
+		DBPassword: "sql1234",
+		DBHost:     "localhost",
+		DBTable:    "postgres",
+		DBPort:     "5432",
 	}
 }
+
+//asdasdasd

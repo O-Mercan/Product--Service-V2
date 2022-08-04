@@ -2,13 +2,15 @@ package database
 
 import (
 	"fmt"
+
 	config "github.com/O-Mercan/Product--Service-V2/config"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func NewDatabase() (*gorm.DB, error) {
-	fmt.Println("Setting up new database connection")
+	log.Info("Setting up new database connection")
 
 	dbConfig := config.NewDBConfig()
 

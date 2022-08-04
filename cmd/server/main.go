@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"net/http"
+
 	"github.com/O-Mercan/Product--Service-V2/internal/database"
 	"github.com/O-Mercan/Product--Service-V2/internal/product"
 	transportHTTP "github.com/O-Mercan/Product--Service-V2/internal/transport/http"
-	"net/http"
+	log "github.com/sirupsen/logrus"
 )
 
 // App - the struct with contains like pointers
@@ -13,14 +14,17 @@ import (
 type App struct{}
 
 func (a *App) Run() error {
-	fmt.Println("Setting up our app")
+	log.SetFormatter(&log.JSONFormatter{})
+	log.Info("Setting up our app")
 
 	db, err := database.NewDatabase()
 	if err != nil {
+		log.Error("New Database Error")
 		return err
 	}
 
 	if err = database.MigrateDB(db); err != nil {
+		log.Error("Migrate Error")
 		return err
 	}
 
@@ -30,16 +34,17 @@ func (a *App) Run() error {
 	handler.SetUpRoutes()
 
 	if err := http.ListenAndServe(":8080", handler.Router); err != nil {
-		fmt.Println("Failed to set up server")
+		log.Error("Failed to set up server")
 		return err
 	}
-	fmt.Println("Server is running on port 8080")
+	log.Info("Server is running on port 8080")
 	return nil
+
 }
 
 func main() {
 	app := App{}
 	if err := app.Run(); err != nil {
-		fmt.Println("Error starting API")
+		log.Error("Error starting API")
 	}
 }
