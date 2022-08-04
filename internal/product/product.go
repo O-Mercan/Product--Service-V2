@@ -3,7 +3,6 @@ package product
 import (
 	"errors"
 
-	//"github.com/logrusutil/v1/errfield"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -14,14 +13,6 @@ var (
 	ErrProductUpdate    = errors.New("Product Not Update")
 	ErrProductExist     = errors.New("Product already exist")
 )
-
-/* func GetErrorFields(err error) log.Fields {
-	var e *errfield.Error
-	if errors.As(err, &e) {
-		//e.Fields are map[string]interface{} the same as logrus.Fieldsreturn e.Fields.(logrus.Fields)
-	}
-	return log.Fields{}
-} */
 
 // Service - the struct four our product service
 type Service struct {
@@ -35,11 +26,6 @@ type Product struct {
 	Description string
 	Price       int
 }
-
-/* log.WithFields(log.Fields{
-	"file": "product.go",
-	"line": "33",
-}).Error("ID doesn't exist")  */
 
 // ProductsService - the interface for our product service
 type ProductsService interface {
@@ -59,7 +45,7 @@ func (s *Service) GetProduct(ID uint) (Product, error) {
 			"productID": product.ID,
 			"requestID": ID,
 			"Function":  "GetProduct",
-		}).Error("ID doesn't exist")
+		}).Error(result.Error.Error())
 		return Product{}, ErrProductNotFound
 	}
 	return product, nil
@@ -70,7 +56,7 @@ func (s *Service) PostProduct(product Product) (Product, error) {
 	if result := s.DB.Save(&product); result.Error != nil {
 		log.WithFields(log.Fields{
 			"Function": "PostProduct",
-		}).Error("Product can't sending")
+		}).Error(result.Error.Error())
 		return Product{}, ErrProductUpdate
 	}
 	return product, nil
@@ -82,7 +68,7 @@ func (s *Service) GetProducts() (Product, error) {
 	if result := s.DB.Scan(&product); result.Error != nil {
 		log.WithFields(log.Fields{
 			"Function": "GetProducts",
-		}).Error("Failed to get product")
+		}).Error(result.Error.Error())
 		return Product{}, ErrProductsNotFound
 	}
 	return product, nil
@@ -93,15 +79,14 @@ func (s *Service) PutProduct(ID uint, newProduct Product) (Product, error) {
 	var product Product
 	pr, err := s.GetProduct(ID)
 	if err != nil {
+		return Product{}, err
+	}
+	if result1 := s.DB.Model(&pr).Updates(newProduct); result1.Error != nil {
 		log.WithFields(log.Fields{
 			"productID": product.ID,
 			"requestID": ID,
 			"Function":  "PutProduct",
-		}).Error("ID doesn't exist")
-		return Product{}, err
-	}
-	if result1 := s.DB.Model(&pr).Updates(newProduct); result1.Error != nil {
-
+		}).Error(result1.Error.Error())
 		log.Error("PutProduct error")
 		return Product{}, ErrProductExist
 	}
@@ -114,7 +99,7 @@ func (s *Service) DeleteProduct(ID uint) (Product, error) {
 	if result := s.DB.Delete(&product, ID); result.Error != nil {
 		log.WithFields(log.Fields{
 			"Function": "DeleteProduct",
-		}).Error("ID doesn't exist")
+		}).Error(result.Error.Error())
 		return Product{}, ErrProductNotFound
 	}
 	return product, nil
