@@ -134,7 +134,10 @@ func (h *Handler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 
 	pr, err := h.Service.DeleteProduct(uint(i))
 	if err != nil {
-		log.Error("DeleteProduct handler")
+		log.WithFields(log.Fields{
+			"Function": "DeleteProduct",
+		}).Error("ID doesn't exist")
+		//log.Error("DeleteProduct handler")
 		sendErrorResponse(w, "Failed to delete a product", err)
 	}
 
